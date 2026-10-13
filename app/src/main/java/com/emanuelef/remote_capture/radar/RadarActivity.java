@@ -2,9 +2,11 @@ package com.emanuelef.remote_capture.radar;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,9 +22,11 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.emanuelef.remote_capture.CaptureHelper;
 import com.emanuelef.remote_capture.CaptureService;
+import com.emanuelef.remote_capture.activities.MainActivity;
 import com.emanuelef.remote_capture.model.CaptureSettings;
 
 public class RadarActivity extends AppCompatActivity {
@@ -47,14 +51,17 @@ public class RadarActivity extends AppCompatActivity {
         root.setOrientation(LinearLayout.VERTICAL);
         root.setFitsSystemWindows(true);
 
-        LinearLayout bar = new LinearLayout(this);
-        bar.setOrientation(LinearLayout.HORIZONTAL);
-        bar.addView(button("Старт", v -> startAll()), weight());
-        bar.addView(button("Стоп", v -> stopAll()), weight());
-        bar.addView(button("Обновить", v -> reload()), weight());
-        bar.addView(button("Лог", v -> showLog()), weight());
-        root.addView(bar, new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        LinearLayout row1 = new LinearLayout(this);
+        row1.addView(button("Старт", v -> startAll()), weight());
+        row1.addView(button("Стоп", v -> stopAll()), weight());
+        row1.addView(button("Обновить", v -> reload()), weight());
+        root.addView(row1, wrap());
+
+        LinearLayout row2 = new LinearLayout(this);
+        row2.addView(button("Оверлей", v -> startOverlay()), weight());
+        row2.addView(button("PCAPdroid", v -> startActivity(new Intent(this, MainActivity.class))), weight());
+        row2.addView(button("Лог", v -> showLog()), weight());
+        root.addView(row2, wrap());
 
         web = new WebView(this);
         WebSettings ws = web.getSettings();
@@ -90,9 +97,22 @@ public class RadarActivity extends AppCompatActivity {
     }
 
     private void stopAll() {
+        stopService(new Intent(this, OverlayService.class));
         CaptureService.stopService();
         RadarRunner.stop();
         toast("Остановлено");
+    }
+
+    private void startOverlay() {
+        if (!Settings.canDrawOverlays(this)) {
+            toast("Разреши показ поверх других приложений и вернись назад");
+            startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName())));
+            return;
+        }
+        if (!RadarRunner.isRunning()) startAll();
+        ContextCompat.startForegroundService(this, new Intent(this, OverlayService.class));
+        toast("Оверлей включён. Открой игру");
     }
 
     private void reload() {
@@ -112,12 +132,20 @@ public class RadarActivity extends AppCompatActivity {
     private Button button(String text, View.OnClickListener l) {
         Button b = new Button(this);
         b.setText(text);
+        b.setTextSize(12);
+        b.setMinWidth(0);
+        b.setMinimumWidth(0);
         b.setOnClickListener(l);
         return b;
     }
 
     private LinearLayout.LayoutParams weight() {
         return new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f);
+    }
+
+    private LinearLayout.LayoutParams wrap() {
+        return new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     private void toast(String s) {

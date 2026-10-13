@@ -18,6 +18,12 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Keep the debug signing key between builds
+        uses: actions/cache@v4
+        with:
+          path: ~/.android/debug.keystore
+          key: debug-keystore-v1
+
       - name: Fetch radar binaries
         env:
           GH_TOKEN: ${{ github.token }}
