@@ -127,7 +127,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     private static final int POS_STATUS = 0;
     private static final int POS_CONNECTIONS = 1;
-    private static final int TOTAL_COUNT = 2;
+    private static final int POS_RADAR = 2;
+    private static final int TOTAL_COUNT = 3;
 
     public static final String TELEGRAM_GROUP_NAME = "PCAPdroid";
     public static final String GITHUB_PROJECT_URL = "https://github.com/emanuele-f/PCAPdroid";
@@ -501,6 +502,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     return new StatusFragment();
                 case POS_CONNECTIONS:
                     return new DataViewContainerFragment();
+                case POS_RADAR:
+                    return new com.emanuelef.remote_capture.radar.RadarFragment();
             }
         }
 
@@ -514,6 +517,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
                     return R.string.status;
                 case POS_CONNECTIONS:
                     return R.string.connections_view;
+                case POS_RADAR:
+                    return R.string.radar_tab;
             }
         }
     }

@@ -79,6 +79,7 @@ public class RadarActivity extends AppCompatActivity {
 
         setContentView(root);
         if (RadarRunner.isRunning()) reload();
+        if (getIntent().getBooleanExtra("overlay", false)) handler.post(this::startOverlay);
     }
 
     private void startAll() {
