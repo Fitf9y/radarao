@@ -26,7 +26,7 @@ import com.emanuelef.remote_capture.CaptureService;
 import com.emanuelef.remote_capture.model.CaptureSettings;
 
 public class RadarActivity extends AppCompatActivity {
-    private static final String ALBION_PKG = "com.albiongames.client";
+    private static final String ALBION_PKG = "com.albiononline";
     private static final String RADAR_URL = "http://127.0.0.1:5001/";
 
     private CaptureHelper capHelper;
