@@ -64,7 +64,7 @@
     <string name="about">About</string>
     <string name="status">Status</string>
     <string name="connections_view">Connections</string>
-    <string name="radar_tab" translatable="false">Radar</string>
+    <string name="radar_tab" translatable="false">Радар</string>
     <string name="no_connections">No connections</string>
     <string name="connection_details">Connection details</string>
     <string name="app">App</string>

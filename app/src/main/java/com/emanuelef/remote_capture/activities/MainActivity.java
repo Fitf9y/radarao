@@ -526,6 +526,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     private void setupTabs() {
         final MainStateAdapter stateAdapter = new MainStateAdapter(this);
         mPager.setAdapter(stateAdapter);
+        mPager.setOffscreenPageLimit(2);
+        mPager.setCurrentItem(POS_RADAR, false);
 
         new TabLayoutMediator(findViewById(R.id.tablayout), mPager, (tab, position) ->
                 tab.setText(getString(stateAdapter.getPageTitle(position)))

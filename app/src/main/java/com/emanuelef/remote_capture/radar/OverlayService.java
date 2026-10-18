@@ -34,9 +34,10 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 public class OverlayService extends Service {
+    public static volatile boolean running = false;
     public static final String ACTION_STOP = "com.emanuelef.remote_capture.radar.STOP_OVERLAY";
     private static final String CHANNEL = "radar_overlay";
-    private static final String URL = "http://127.0.0.1:5001/";
+    private static final String URL = "http://127.0.0.1:5001/?overlay=1";
     private static final float[] ALPHAS = {0.8f, 0.65f, 0.5f, 0.35f};
 
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -64,6 +65,7 @@ public class OverlayService extends Service {
             return START_NOT_STICKY;
         }
         startForegroundNow();
+        running = true;
         if (bar == null) {
             try {
                 createWindows();
@@ -247,6 +249,7 @@ public class OverlayService extends Service {
 
     @Override
     public void onDestroy() {
+        running = false;
         handler.removeCallbacksAndMessages(null);
         try {
             if (bar != null) wm.removeView(bar);

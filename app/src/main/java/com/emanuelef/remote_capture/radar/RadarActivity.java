@@ -78,6 +78,8 @@ public class RadarActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
 
         setContentView(root);
+        if (getIntent().getBooleanExtra("autostart", false)) handler.post(this::startAll);
+        if (getIntent().getBooleanExtra("overlay", false)) handler.post(this::startOverlay);
         if (RadarRunner.isRunning()) reload();
         if (getIntent().getBooleanExtra("overlay", false)) handler.post(this::startOverlay);
     }
